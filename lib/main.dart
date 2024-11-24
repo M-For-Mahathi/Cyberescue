@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'screens/sign_up_screen.dart'; // Import the SignUpScreen
+import 'screens/main_screen.dart'; // Import MainScreen from screens
 
 void main() {
-  runApp(MyApp());
+  runApp(CyberEscueApp());
 }
 
-class MyApp extends StatelessWidget {
+class CyberEscueApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CyberEscue',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: SignUpScreen(), // Set SignUpScreen as the home screen
+      title: 'Cyberescue',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MainScreen(),
     );
   }
 }

@@ -5,7 +5,7 @@ class PersonalInfoScreen extends StatefulWidget {
   final String email;
   final String phone;
 
-  // Constructor to receive the data from SignUpScreen
+  // Constructor to pass data from previous screen
   PersonalInfoScreen({
     required this.name,
     required this.email,
@@ -17,63 +17,101 @@ class PersonalInfoScreen extends StatefulWidget {
 }
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _emailController;
-  late TextEditingController _phoneController;
-  late TextEditingController _addressController;
-  late TextEditingController _aadharController;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _aadhaarController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize controllers with pre-filled data
-    _nameController = TextEditingController(text: widget.name);
-    _emailController = TextEditingController(text: widget.email);
-    _phoneController = TextEditingController(text: widget.phone);
-    _addressController = TextEditingController();
-    _aadharController = TextEditingController();
+  String? _addressError, _aadhaarError;
+
+  // Validate the address and Aadhaar fields
+  String? _validateAddress(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your address';
+    }
+    return null;
+  }
+
+  String? _validateAadhaar(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your Aadhaar number';
+    } else if (value.length != 12) {
+      return 'Aadhaar number must be 12 digits';
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Personal Information')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+      appBar: AppBar(
+        title: Text('Personal Info', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                // Display the received data
+                Text('Name: ${widget.name}', style: TextStyle(fontSize: 16)),
+                Text('Email: ${widget.email}', style: TextStyle(fontSize: 16)),
+                Text('Phone: ${widget.phone}', style: TextStyle(fontSize: 16)),
+                SizedBox(height: 20),
+                
+                // Address field
+                TextFormField(
+                  controller: _addressController,
+                  decoration: InputDecoration(
+                    labelText: 'Address',
+                    labelStyle: TextStyle(color: Colors.green),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  maxLines: 3, // Allow multiple lines for address input
+                  validator: _validateAddress,
+                ),
+                SizedBox(height: 10),
+
+                // Aadhaar field
+                TextFormField(
+                  controller: _aadhaarController,
+                  decoration: InputDecoration(
+                    labelText: 'Aadhaar Number',
+                    labelStyle: TextStyle(color: Colors.green),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: _validateAadhaar,
+                ),
+                SizedBox(height: 20),
+
+                // Save Button
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // If form is valid, show success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Personal Info Saved!')),
+                      );
+                      // You can navigate to another screen here if needed
+                    }
+                  },
+                  child: Text('Save'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ],
             ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(labelText: 'Address'),
-            ),
-            TextField(
-              controller: _aadharController,
-              decoration: InputDecoration(labelText: 'Aadhar Card Number'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Here you can handle saving/updating the user's personal info
-                print('Name: ${_nameController.text}');
-                print('Email: ${_emailController.text}');
-                print('Phone: ${_phoneController.text}');
-                print('Address: ${_addressController.text}');
-                print('Aadhar: ${_aadharController.text}');
-              },
-              child: Text('Save'),
-            ),
-          ],
+          ),
         ),
       ),
     );
