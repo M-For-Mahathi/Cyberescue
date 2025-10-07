@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/main_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/personal_info_screen.dart';
 import 'screens/comfort_chatbot.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/config.env");
   runApp(CyberEscueApp());
 }
+
 
 class CyberEscueApp extends StatelessWidget {
   @override
@@ -16,8 +20,8 @@ class CyberEscueApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false, // Optional: removes debug banner
-      home: MainScreen(), // 👈 This is now the first screen on launch
+      debugShowCheckedModeBanner: false,
+      home: MainScreen(),
     );
   }
 }
