@@ -100,3 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+
+class ChatbotService {
+  getChatbotResponse(String userMessage) {}
+}
